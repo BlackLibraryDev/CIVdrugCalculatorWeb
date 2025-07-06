@@ -221,6 +221,11 @@ const update = function () {
                     _dose = 1000;
                     _bwt = 1;
                     break;
+                case "mcg/hr":
+                    _min = 1;
+                    _dose = 1000;
+                    _bwt = 1;
+                    break;
                 //mg
                 case "mg/kg/min":
                     _min = 60;
@@ -247,6 +252,10 @@ const update = function () {
             _min = 0;
             switch (_drugspeedtxt) {
                 //unit
+                 case "unit/kg/min":
+                    _min = 60;
+                    _dose = 1;
+                    break;
                 case "unit/kg/hr":
                     _min = 1;
                     _dose = 1;
