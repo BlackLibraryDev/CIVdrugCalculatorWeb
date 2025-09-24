@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <link rel="stylesheet" type="text/css" href="StyleSheet.css" />
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
+    <link rel="icon" href="favicon-32x32.png" />
+    <link rel="apple-touch-icon" href="favicon-32x32.png" />
+    <title> CIV Drug Calculator </title>
+</head>
+
+<body>
+    <!--<script type="text/javascript" src="Language.js"></script>-->
+    <header>
+        <div>
+            <h1>
+
+                <a class="civ" id="civIcon" href="#" style="float:left; margin-left:10px; margin-right:10px"></a>
+                CIV Drug Calculator
+            </h1>
+
+            <span style="font-size:20px; margin:10px">powered by HTML5/JS</span>
+            <!-- 버전 -->
+            <span style="font-size:16px;vertical-align:top; margin-left:10px; margin-right:10px; float:right"> ver 0.55 </span>
+        </div>
+        <hr style="margin-top:20px" />
+    </header>
+
+    <!-- 하단 버튼들 -->
+    <div>
+        <button id="addbt" class="box"><a class="icon_plus"></a><p style="margin-top:5px"></p></button>
+    </div>
+    <div>
+        <button id="presetbt" class="box"><a class="icon_preset"></a><p style="margin:5px 0px 0px 10px; text-align: left">  Preset</p></button>
+    </div>
+    <div class="bwt box">
+        <input id="bwtinput" type="number" min="0" value="65" step="0.1" /><span style="font-size:16px; float:right; margin:14px 2px 2px 0px">kg</span>
+    </div>
+
+    <!-- 모달 팝업 (메인메뉴) -->
+    <div class="modal menu" id="menuPanel">
+        <a class="icon_x" id="menuiconX" style="margin:10px 5px 5px 10px; float:left"></a>
+        <div style="border :2px solid white; width:44px; height: 44px;margin:4px;"></div>
+        <p style="text-align:left; width:150px;margin:4px; color:white"> Main Menu button /close</p>
+        <br /> <br />
+        <h2 style="max-width:500px; width:100vw; margin:25px 0px 10px 0px; text-align:center; color:white"> CIV drug Calculator </h2>
+        <div class="infobox">
+            <p style="text-align: right; width: 200px; bottom: 90px; color: white"> Please input body weight </p>
+            <div style="margin-left:100px; bottom: 35px; border: 2px solid white; width: 120px; height: 50px"> </div>
+        </div>
+    </div>
+
+    <!-- 프리셋 모달 팝업 -->
+    <div class="modal preset" id="presetPanel">
+        <a class="icon_x" id="iconX" style="margin:10px 5px 5px 10px; float:left"></a>
+        <br /> <br />
+        <h2 style="max-width: 500px; width: 100vw; margin: 25px 0px 10px 0px; text-align: center; color: white">Preset List </h2>
+
+        <!-- 포지션 -->
+        <ul id="presetPosition"></ul>
+
+        <div style="position: fixed; left:50%; transform:translate(-50%,0); bottom: 20px">
+            <!-- style="margin-top:10px; display:flex; " -->
+            <button id="prevBt" style="width:60px;height:30px"> &lt; prev </button> <input class="disableInput center" id="presetpage" value="" disabled="disabled" style="font-size:20px; width:50px;color:white;margin-top:10px" />  <button id="nextBt" style="width: 60px; height: 30px"> next &gt; </button>
+        </div>
+
+        <!--
+    <p style="position:fixed; right:30px;bottom:90px; color:white"> Please input body weight </p>
+    <div style="position:fixed; right:20px; bottom:35px; border:2px solid white; width: 120px; height:50px"> </div>
+        -->
+    </div>
+
+
+    <!-- 포지션 -->
+    <ul id="position"></ul>
+
+
+    <footer>
+        <hr style="margin-top:20px" />
+        <h3>
+            <a class="mail" href="mailto:shadowstarDeveloper@gmail.com"
+               style="margin-left:5px">shadowstarDeveloper@gmail.com</a>
+        </h3>
+        <h3>
+            <span style="margin-left:5px">BlackLibrary</span>
+        </h3>
+        <div style="margin-left:10px" > <a style="font-size:12px;" target="_blank" href="https://doc-hosting.flycricket.io/civdrugcalculator-privacy-policy/29713062-5d1e-473d-b2c5-dc6a0e97bca4/privacy"> Common Privacy policy(app,site) </a></div>
+    </footer>
+
+    <!-- 약물 리스트 템플렛 -->
+    <template id="drugitemid">
+        <li class="drugitem">
+            <div style="display: inline-block; width:96%">
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th></th>
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="drugnamecell">
+                                <input class="drugnametxt" placeholder="Drugname.." />
+
+
+
+                            </td>
+                            <td class="dosefluidcell">
+                                <input class="drugdose" type="number" min="0" value="4" />
+                                <!--<span>mg/</span>-->
+                                <select class="dosebt" id="dosebt">
+                                    <option value=1>mg</option>
+                                    <option value=1000>mcg</option>
+                                    <option value=-1>unit</option>
+                                </select>
+                                <input class="fluidcc" type="number" min="0" value="50" />
+                                <span>cc</span>
+
+
+                            </td>
+                        </tr>
+                    </tbody>
+                    <tbody>
+                        <tr>
+                            <td style="display:flex; flex-direction:row; margin-top:5px;">
+                                <input class="drugspeed" type="number" value="0.02" step="0.01"/>
+                                <select class="drugspeedtxt">
+                                    <option value="mcg/kg/min">mcg/kg/min</option>
+                                    <option value="mcg/kg/hr">mcg/kg/hr</option>
+                                    <option value="mcg/min">mcg/min</option>
+                                    <option value="mcg/hr">mcg/hr</option>
+                                    <option value="mg/kg/min">mg/kg/min</option>
+                                    <option value="mg/kg/hr">mg/kg/hr</option>
+                                    <option value="mg/min">mg/min</option>
+                                    <option value="mg/hr">mg/hr</option>
+                                    <option value="unit/kg/min">unit/kg/min</option>
+                                    <option value="unit/kg/hr">unit/kg/hr</option>
+                                    <option value="unit/min">unit/min</option>
+                                    <option value="unit/hr">unit/hr</option>
+                                </select>
+
+
+                            </td>
+                            <td style="text-align:right;">
+
+                                <span class="drugresult"></span>
+                                <button class="speedBt up" id="upBt" style="margin-right:0px;"> ▲ </button>
+                                <input class="valueTxt" style="width: 0px; background: none; border: none;" />
+                                <button class="speedBt down" id="downBt" style="margin-right:-25px;"> ▼ </button>
+
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div style="display: inline-block; width: 4%; float: right; vertical-align: top; margin-top:5px">
+                <button class="xbt"><a class="icon_delete"></a></button>
+
+            </div>
+            <!--
+    <div style="display: inline-block; width: 0%; float:right; vertical-align:bottom; margin-top:30px">
+
+
+    </div
+        -->
+        </li>
+    </template>
+
+
+    <!-- 프리셋 템플렛-->
+    <template id="presetItemID">
+        <li class="presetItem">
+            <div style="display: inline-block; width: 100%">
+
+                <table style="width:100%" class="presetItemAddBt">
+
+                    <tr>
+
+                        <td >
+                            <input class="disableInput" id="presetName" value="" disabled="disabled" style="font-size:18px" />
+
+
+                        </td>
+                        <td width="130px">
+                            <input class="disableInput right" id="presetDose" value="" disabled="disabled" />
+
+                        </td>
+                        <td width="80px" rowspan="2">
+                            <button  style="width: 70px ; height:40px; margin:0px 0px 0px 0px; float:right; vertical-align:top">+ add item</button>
+                        </td>
+
+                    </tr>
+                    <tr>
+                        <td width="180px" colspan="2">
+                            <input class="disableInput" id="drugSpeed" value="" disabled="disabled" />
+                        </td>
+                      
+                    </tr>
+
+                </table>
+
+            </div>
+            
+        </li>
+
+    </template>
+    <!-- 자바스크립트 로드 -->
+    <script type="text/javascript" src="PresetDrugList.js"></script>
+    <script type="text/javascript" src="Script.js"></script>
+</body>
+
+</html>

@@ -1,349 +1,206 @@
-// JavaScript source code
-//document.write('<script src="PresetDrugList.js"></script>');
+const inputBox = document.getElementById("inputBox");
+const addBoxBtn = document.getElementById("addBoxBtn");
+const totalEl = document.getElementById("total");
+const bwtBox = document.getElementById("bodyWeight");
 
+// Î∞ïÏä§ ID Í¥ÄÎ¶¨
+let boxCount = 0;
 
-const BWTinput = document.querySelector('#bwtinput');
+// Î∞ïÏä§ Ï∂îÍ∞Ä Ìï®Ïàò
+function addBox() {
+  //boxCount++;
 
-const drugNameTxt = document.getElementsByClassName("drugnametxt");
-const drugDose = document.getElementsByClassName('drugdose');
-const fluidCC = document.getElementsByClassName('fluidcc');
-const doseBt = document.getElementsByClassName('dosebt');
+  const box = document.createElement("div");
+  //box.className = "min-w-full"
 
-const drugSpeed = document.getElementsByClassName('drugspeed');
-const drugSpeedTxt = document.getElementsByClassName('drugspeedtxt');
-const drugResult = document.getElementsByClassName('drugresult');
-const valueTxxt = document.getElementsByClassName('valueTxt');
+  // Î∞ïÏä§ ÎÇ¥Î∂Ä ÎÇ¥Ïö©
+box.innerHTML = `
+  <div class="bg-white p-3 rounded shadow w-full max-w-full text-sm">
+    <!-- 1Ìñâ -->
+    <div class="grid grid-cols-[1fr_auto_auto_auto] gap-2 items-center">
+      <!-- ÏïΩÎ¨ºÏù¥Î¶Ñ -->
+      <input type="text" placeholder="ÏïΩÎ¨ºÏù¥Î¶Ñ" 
+        class="border p-1 rounded drugName flex-1 min-w-0 text-sm " />
 
-const drugItemID = document.getElementById("drugitemid");
-const addBt = document.getElementById("addbt");
-const position = document.getElementById("position");
+      <div class="flex items-center gap-1">
+        <!-- ÏïΩÎ¨ºÏö©Îüâ -->
+        <input type="number" placeholder="Ïö©Îüâ" min="0" step="0.1"
+          class="border p-1 rounded drugDose w-12 text-right text-sm" />
 
-//«¡∏Æº¬ µ•¿Ã≈Õ
-const presetBt = document.getElementById("presetbt");
-const iconX = document.getElementById("iconX");
-const presetPanel = document.getElementById("presetPanel");
-const presetItemID = document.getElementById("presetItemID");
-const presetPosition = document.getElementById("presetPosition");
-const presetPage = document.getElementById("presetpage");
-const prevBt = document.getElementById("prevBt");
-const nextBt = document.getElementById("nextBt");
+        <!-- ÏïΩÎ¨ºÎã®ÏúÑ -->
+        <select class="border p-1 rounded drugUnit w-12 text-sm">  
+          <option value="mcg">mcg</option>
+          <option value="mg" selected>mg</option>
+          <option value="unit">unit</option>
+        </select>
+      </div>
 
+      <!-- Íµ¨Î∂ÑÏÑ† -->
+      <div class="text-center">/</div>
 
-//∏ﬁ¿Œ∏ﬁ¥∫ µ•¿Ã≈Õ
-const mainMenuBt = document.getElementById("civIcon");
-const menuPanel = document.getElementById("menuPanel");
-const menuX = document.getElementById("menuiconX");
+      <!-- Ïö©Ïï° Ïö©Îüâ -->
+      <div class="flex items-center">
+        <input type="number" placeholder="Ïö©Ïï°Îüâ" min="0" step="0.1"
+          class="border p-1 rounded w-12 solutionVolume text-right text-sm" />
+        <span class="ml-1">cc</span>
+      </div>
+    </div>
 
-//∏ﬁ¿Œ∏ﬁ¥∫ ∏¥ﬁ
-mainMenuBt.addEventListener("mousedown", function (e) {
-    //∏ﬁ¥∫ ≈‰±€
-    menuPanel.style.display = "inline";
-})
-menuX.addEventListener("mousedown", fmodalClose);
+    <!-- 2Ìñâ -->
+    <div class="grid grid-cols-[1fr_auto] gap-2 items-center mt-2">
+      <div class="flex items-center gap-1">
+        <!-- Ï£ºÏûÖÏÜçÎèÑ -->
+        <input type="number" placeholder="Ï£ºÏûÖÏÜçÎèÑ" min="0" step="0.01"
+          class="border p-1 rounded infusionRate w-12 text-right text-sm" />
 
-//«¡∏Æº¬ ∏¥ﬁ
-iconX.addEventListener("mousedown", fmodalClose);
-presetBt.addEventListener("mousedown", function (e) {
-    //«¡∏Æº¬ ∏¥ﬁ ƒ—±‚
-    presetPanel.style.display = "inline";
-    fpresetSet();
-})
-//∏¥ﬁ ≤Ù±‚ ∞¯≈Î
-function fmodalClose(e) {
-    //«¡∏Æº¬ ∏¥ﬁ ≤Ù±‚
-    e.currentTarget.parentNode.style.display = "none";
-}
-addBt.addEventListener('click', function (e) {
-    //√ﬂ∞° πˆ∆∞
-   addItem(null);
-})
-window.addEventListener('input', function (e) {
-    update();
-});
-window.addEventListener('keydown', function (e) {
+        <!-- Ï£ºÏûÖÏÜçÎèÑ Îã®ÏúÑ -->
+        <select class="border p-1 rounded rateGram w-16 text-sm">
+          <option value="mcg">mcg</option>
+          <option value="mg">mg</option>
+          <option value="unit">unit</option>
+        </select>
+
+        <select class="border p-1 rounded rateUnit w-20 text-sm">
+          <option value="/kg/min">/kg/min</option>
+          <option value="/kg/hr">/kg/hr</option>
+          <option value="/min">/min</option>
+          <option value="/hr">/hr</option>
+        </select>
+      </div>
+
+      <!-- Í≤∞Í≥ºÍ∞í -->
+      <div class="flex items-center font-bold text-blue-600 text-sm">
+        = <span class="ml-2 result"></span>
+      </div>
+    </div>
 
     
-    if (e.key == "Escape") {
-        //console.log(e.key);
-        if (presetPanel.style.display != "none") {
-            presetPanel.style.display = "none";
-        }
-        else if (menuPanel.style.display != "none") {
-            menuPanel.style.display = "none";
-        } else {
-            menuPanel.style.display = "inline";
-        }
-    }
-})
-//æ∆¿Ã≈€ √ﬂ∞°
-function addItem( object ){
-     const item = drugItemID.content.cloneNode(true);
-     const drugnameTxt = item.querySelector(".drugnametxt");
-     const drugdoseTxt = item.querySelector(".drugdose");
-    const fluidccTxt = item.querySelector(".fluidcc");
-    const dosebt = item.querySelector(".dosebt");
+  </div>
+  <!-- Î≤ÑÌäº -->
+  <div class="flex justify-between mt-1">
+    <!-- ÏôºÏ™Ω Î≤ÑÌäºÎì§ -->
+    <div class="flex gap-1">
+      <button class="border p-1 rounded bg-white BtnDown text-sm">‚ûñ</button>
+      <input type="number"  value="0.01" min="0.01" class="border p-1 rounded bg-white infusionValue w-12 text-center text-sm" />
+      <button class="border p-1 rounded bg-white BtnUp text-sm">‚ûï</button>
+      <button class="border mx-2 p-1 rounded bg-white BtnPreset text-sm">üïÆÌîÑÎ¶¨ÏÖã</button>
+    </div>
+
+    <!-- Ïò§Î•∏Ï™Ω Î≤ÑÌäº -->
+    <div>
+      <!-- ÏÇ≠Ï†úÎ≤ÑÌäº -->
+      <button class="border p-1 rounded bg-white BtnDelete text-sm">‚ùå</button>
+    </div>
+  </div>
+`
+
+
+  inputBox.appendChild(box);
+
+  //ÏÇ≠Ï†úÎ≤ÑÌäº
+  box.querySelector(".BtnDelete").addEventListener("click", () => {
+    box.remove();
+  });
+  //Ï¶ùÍ∞ÄÎ≤ÑÌäº
+  box.querySelector(".BtnUp").addEventListener("click", () => {
+    let delta = parseFloat(box.querySelector(".infusionValue").value) || 0.01;
+    const doseInput = box.querySelector(".infusionRate");
+    doseInput.value = Number( ((parseFloat(doseInput.value) || 0) + delta).toFixed(2) );
+    updateDrugBox(box);
+  });
+  //Í∞êÏÜåÎ≤ÑÌäº
+  box.querySelector(".BtnDown").addEventListener("click", () => {
+    let delta = parseFloat(box.querySelector(".infusionValue").value) || 0.01;
+    const doseInput = box.querySelector(".infusionRate");
+    doseInput.value =Number( ( Math.max((parseFloat(doseInput.value) || 0) - delta, 0)).toFixed(2) ) ;
+    updateDrugBox(box);
+  });
+  //Í∞í Î≥¥Ï†ï
+  box.querySelector(".infusionValue").addEventListener("change", () => {
+    let delta = parseFloat(box.querySelector(".infusionValue").value) || 0.01;
+    if(delta<0.01) {
+      box.querySelector(".infusionValue").value = 0.01;
+    } 
+  });
+
+  // Ïù¥Î≤§Ìä∏ Îì±Î°ù (Í∞íÏù¥ Î∞îÎÄî Îïå Ï¥ùÌï© ÏóÖÎç∞Ïù¥Ìä∏)
+    box.querySelectorAll("input").forEach(input => {
+    input.addEventListener("input", () => updateDrugBox(box));
+    box.addEventListener("change", () => updateDrugBox(box));
+  });
+}
+bwtBox.addEventListener("input", () => updateAllBoxes());
+function updateAllBoxes() {
+  document.querySelectorAll("#inputBox > div").forEach(box => {
+    updateDrugBox(box);
+  });
+}
+
+function updateDrugBox(box) {
+  const drugDose = parseFloat(box.querySelector(".drugDose").value) || 0;
+  const vol = parseFloat(box.querySelector(".solutionVolume").value) || 0;
+  const drugUnit = box.querySelector(".drugUnit").value;
+
+  const rate = parseFloat(box.querySelector(".infusionRate").value) || 0;
+  const rateGram = box.querySelector(".rateGram").value;
+  const rateUnit = box.querySelector(".rateUnit").value;
+
+
+  //console.log(`drugDose: ${drugDose} ${drugUnit}, vol: ${vol}, rate: ${rate} ${rateGram}${rateUnit}`);
     
-     const drugspeedTxt = item.querySelector(".drugspeed");
-     const drugspeedTxtbox = item.querySelector(".drugspeedtxt");
 
-    //Ω∫««µÂπˆ∆∞
-    const upBt = item.querySelector(".speedBt.up");
-    const downBt = item.querySelector(".speedBt.down");
-    //∫Ø»Ø∞™ ¿˙¿Â
-    const valueTxt = item.querySelector(".valueTxt");
+  let bodyWeight = parseFloat(bwtBox.value) || 0;
+  let _min = 0;
+  let _dose = 0;
+  let _doseUnit = 1;
 
-     if(object !=null){
-         drugnameTxt.value = object.drugName;
-         drugdoseTxt.value = object.drugDose;
-         dosebt.value = 1;
-         if (object.drugGram == "mg") {
-             dosebt.value = 1;
-         }
-         if (object.drugGram == "mcg") {
-             //drugdoseTxt.value = object.drugDose;// * 0.001;
-             dosebt.value = 1000;
-         }
-         if (object.drugGram == "unit") {
-             dosebt.value = -1;
-         }
-         fluidccTxt.value = object.fluidTotalcc;
-         drugspeedTxt.value = object.drugSpeed;
-         drugspeedTxtbox.value = object.drugSpeedtxt;
-         
-    }
-    let vel = 0.01;
-    if (drugspeedTxt.value >= 0.01) {
-        vel = 0.01;
-    }
-    if (drugspeedTxt.value >= 0.1) {
-        vel = 0.1;
-    }
-    if (drugspeedTxt.value >= 1) {
-        vel = 1;
-    }
-    valueTxt.value = vel;
-    drugspeedTxt.addEventListener('input', function () {
-        let vel = 0.01;
-        if (drugspeedTxt.value >= 0.01) {
-            vel = 0.01;
-        }
-        if (drugspeedTxt.value >= 0.1) {
-            vel = 0.1;
-        }
-        if (drugspeedTxt.value >= 1) {
-            vel = 1;
-        }
-        valueTxt.value = vel;
-        //console.log(vel);
-    })
+  if(drugUnit == "mcg") {
+    _doseUnit = 1000;
+  }
+  if(drugUnit == "mg") {
+    _doseUnit = 1;
+  }
+  if(drugUnit == "unit") {
+    _doseUnit = 1;
+  }
 
-    upBt.addEventListener('mousedown', function (e) {
- 
-        if (drugspeedTxt.value != null) {
-            let result = (Math.round((Number(drugspeedTxt.value) + Number(valueTxt.value)) * 100) / 100).toFixed(2);
-            drugspeedTxt.value = Number(result);
-            update();
-        }
-    })
-    downBt.addEventListener('mousedown', function (e) {
-
-        if (drugspeedTxt.value != null) {
-            let result = (Math.round((Number(drugspeedTxt.value) - Number(valueTxt.value)) * 100) / 100).toFixed(2)
-            drugspeedTxt.value = Number(result);
-            
-            if (drugspeedTxt.value <= 0) {
-                drugspeedTxt.value = 0;
-            }
-            update();
-        }
-    })
-    /*drugnameTxt.addEventListener("touchstart", function (e) {
-        e.currentTarget.value = "";
-    })
-    drugnameTxt.addEventListener("mousedown", function (e) {
-        e.currentTarget.value = "";
-    })*/
-    // drugnameTxt.addEventListener("change", drugsearch);
-    item.querySelector(".xbt").addEventListener("mousedown", function (e) {
-        /*∫Œ∏ø°º≠ ªˆ¿Œ«ÿº≠ «ÿ¥Á ∞¥√º ªË¡¶*/
-        for (i = 0; i < position.childNodes.length; i++) {
-            if (position.childNodes[i] == e.currentTarget.parentNode.parentNode) {
-                position.removeChild(position.childNodes[i]);
-                break;
-            }
-        }
-    })
-
-    position.appendChild(item);
-    update();
-}
-/**
- * @param {InputEvent} e 
- */
-
-
-const update = function () {
-    //console.log(BWTinput.value);
+  //ÏïΩÎ¨º Îã®ÏúÑ
+  if(rateGram == "mcg") {
+    _dose = 1000;
+  }else{
+    _dose = 1;
+  }
+  //ÏãúÍ∞Ñ Îã®ÏúÑ
+  switch(rateUnit) {
+    case "/kg/min":
+      _min = 60;
+      break;  
+    case "/kg/hr":
+      _min = 1;
+      break;  
+    case "/min":
+      _min = 60;
+      bodyWeight = 1;
+      break; 
+    case "/hr":
+      _min = 1;
+      bodyWeight = 1;
+      break;  
+  }
+  if((drugUnit=="unit" && rateGram =="unit") || ( drugUnit !="unit" && rateGram !="unit")) {
     
-    //
-    for (let i = 0; i < drugResult.length; i++) {
-        let _drugnametxt = drugNameTxt[i].value;
-        let _doseBt = doseBt[i].value;
-        //console.log(_doseBt);
-        
-        let _bwt = Number(BWTinput.value);
+  }else{
+    //alert("ÏïΩÎ¨ºÎã®ÏúÑÏôÄ Ï£ºÏûÖÏÜçÎèÑ Îã®ÏúÑÎ•º ÎèôÏùºÌïòÍ≤å ÏÑ§Ï†ïÌï¥Ï£ºÏÑ∏Ïöî.");
+    box.querySelector(".result").textContent = "Îã®ÏúÑÏò§Î•ò";
+    return;
+  }
 
-        let _min = 0;
-        let _dose = 0;
-
-        let _drugdose = Number(drugDose[i].value);
-        let _fluidcc = Number(fluidCC[i].value);
-
-        let _drugspeed = drugSpeed[i].value;
-        let _drugspeedtxt = drugSpeedTxt[i].value;
-        let _result = 0;
-
-        if (_doseBt > 0) {
-            //mcg, mg¿œ ∞ÊøÏ
-            _min = 0;
-            switch (_drugspeedtxt) {
-
-                case "mcg/kg/min":
-                    _min = 60;
-                    _dose = 1000;
-                    break;
-                case "mcg/kg/hr":
-                    _min = 1;
-                    _dose = 1000;
-                    break;
-                case "mcg/min":
-                    _min = 60;
-                    _dose = 1000;
-                    _bwt = 1;
-                    break;
-                case "mcg/hr":
-                    _min = 1;
-                    _dose = 1000;
-                    _bwt = 1;
-                    break;
-                //mg
-                case "mg/kg/min":
-                    _min = 60;
-                    _dose = 1;
-                    break;
-                case "mg/kg/hr":
-                    _min = 1;
-                    _dose = 1;
-                    break;
-                case "mg/min":
-                    _min = 60;
-                    _dose = 1;
-                    _bwt = 1;
-                    break;
-                case "mg/hr":
-                    _min = 1;
-                    _dose = 1;
-                    _bwt = 1;
-                    break;
-
-            }
-            _result = (_drugspeed * _fluidcc * _bwt * _min) / (_drugdose * _dose) * _doseBt;
-        } else if (_doseBt < 0) {
-            _min = 0;
-            switch (_drugspeedtxt) {
-                //unit
-                 case "unit/kg/min":
-                    _min = 60;
-                    _dose = 1;
-                    break;
-                case "unit/kg/hr":
-                    _min = 1;
-                    _dose = 1;
-                    break;
-                case "unit/min":
-                    _min = 60;
-                    _dose = 1;
-                    _bwt = 1;
-                    break;
-                case "unit/hr":
-                    _min = 1;
-                    _dose = 1;
-                    _bwt = 1;
-                    break;
-      
-            }
-            _result = (_drugspeed * _fluidcc * _bwt * _min) / (_drugdose * _dose) * -_doseBt;
-        }
-
-        
-        drugResult[i].innerText = ` = ${_result.toFixed(1)}cc/hr `;
-       
-        
-    }
-}
-function fcalculate(value = 0) {
-
+  // üí° Ïó¨Í∏∞ÏÑú Í≥ÑÏÇ∞Ïãù Ï†ïÏùò (ÏòàÏãú: Í≤∞Í≥º = (Ïà´Ïûê * rate) / vol)
+  //const result = vol > 0 ? ((num * rate) / vol).toFixed(2) : 0;
+  const result = (rate * vol * bodyWeight * _min) / (drugDose * _dose) *_doseUnit ;
+  box.querySelector(".result").textContent = (result).toFixed(2) + " cc/hr";
+  
 }
 
-function fsearchPresetList(_tag) {
-    for (let i = 0; i < presetList.length; i++) {
-        if (presetList[i].Tag == _tag) {
-
-            return presetList[i];
-        }
-    }
-    return null;
-}
-let n = 0;
-let m = 0;
-prevBt.addEventListener("mousedown", function (e) {
-    if (n > 0) {
-        n -= 1;
-        fpresetSet();
-    }
-})
-nextBt.addEventListener("mousedown", function (e) {
-    if (n < m) {
-        n += 1;
-        fpresetSet();
-    }
-})
-
-
-function fpresetSet() {
-    //height 46.4 + 10px // 
-    fpresetclear();
-    let count = Math.floor((window.innerHeight - 46 - 28 - 25-30) / 68.4);//- 120
-    m = Math.floor(presetList.length / count) ;
-  //  console.log(count);
-    presetPage.value = `${n+1}/${m+1} `
-    for (let i = n*count; i < presetList.length; i++) {
-
-        
-        if (i < (n+1) * count) {
-            let data = presetList[i];
-            const item = presetItemID.content.cloneNode(true);
-            item.querySelector(".presetItemAddBt").addEventListener("mousedown", function (e) {
-           
-               //console.log(data);
-                addItem(data);
-                presetPanel.style.display = "none";
-            })
-
-            item.querySelector("#presetName").value = `${data.drugName} `  ;
-            item.querySelector("#presetDose").value = `${data.drugDose}mg/${data.fluidTotalcc}cc`;
-            item.querySelector("#drugSpeed").value = `${data.drugSpeed}~${data.maxSpeed} ${data.drugSpeedtxt}`;
-            presetPosition.appendChild(item);
-        }
-        
-    }
-}
-function fpresetclear(){
-    for (i = 0; i < presetPosition.childNodes.length; i++) {
-        presetPosition.removeChild(presetPosition.childNodes[i]);
-        i--;
-        if (presetPosition.childNodes.length <= 0) {
-            break;
-        }  
-    }
-}
+// Î≤ÑÌäº ÌÅ¥Î¶≠ Ïãú Î∞ïÏä§ Ï∂îÍ∞Ä
+addBoxBtn.addEventListener("click", addBox);
