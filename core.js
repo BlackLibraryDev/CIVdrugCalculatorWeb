@@ -288,7 +288,6 @@ function applyDrug(index) {
 
     
     const rate = drug.drugSpeedtxt.split("/");
-    //console.log(rate);
     currentBox.querySelector(".rateGram").value = rate[0];
     let string ="";
     for(let i=1; i<rate.length; i++) {
