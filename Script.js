@@ -11,7 +11,7 @@ function addBox() {
   //boxCount++;
 
   const box = document.createElement("div");
-  //box.className = "min-w-full"
+  box.className = ""
 
   // 박스 내부 내용
 box.innerHTML = `
@@ -19,16 +19,16 @@ box.innerHTML = `
     <!-- 1행 -->
     <div class="grid grid-cols-[1fr_auto_auto_auto] gap-2 items-center">
       <!-- 약물이름 -->
-      <input type="text" placeholder="약물이름" 
+      <input type="text" placeholder="(약물이름)" 
         class="border p-1 rounded drugName flex-1 min-w-0 text-sm " />
 
       <div class="flex items-center gap-1">
         <!-- 약물용량 -->
-        <input type="number" placeholder="용량" min="0" step="0.1"
+        <input type="number" placeholder="약물량" min="0" step="0.1"
           class="border p-1 rounded drugDose w-12 text-right text-sm" />
 
         <!-- 약물단위 -->
-        <select class="border p-1 rounded drugUnit w-12 text-sm">  
+        <select class="border p-1 rounded drugUnit w-14 text-sm">  
           <option value="mcg">mcg</option>
           <option value="mg" selected>mg</option>
           <option value="unit">unit</option>
@@ -54,7 +54,7 @@ box.innerHTML = `
           class="border p-1 rounded infusionRate w-12 text-right text-sm" />
 
         <!-- 주입속도 단위 -->
-        <select class="border p-1 rounded rateGram w-16 text-sm">
+        <select class="border p-1 rounded rateGram w-14 text-right text-sm">
           <option value="mcg">mcg</option>
           <option value="mg">mg</option>
           <option value="unit">unit</option>
@@ -70,7 +70,7 @@ box.innerHTML = `
 
       <!-- 결과값 -->
       <div class="flex items-center font-bold text-blue-600 text-sm">
-        = <span class="ml-2 result"></span>
+        = <span class="ml-2 result">0 cc/hr</span>
       </div>
     </div>
 
@@ -83,13 +83,13 @@ box.innerHTML = `
       <button class="border p-1 rounded bg-white BtnDown text-sm">➖</button>
       <input type="number"  value="0.01" min="0.01" class="border p-1 rounded bg-white infusionValue w-12 text-center text-sm" />
       <button class="border p-1 rounded bg-white BtnUp text-sm">➕</button>
-      <button class="border mx-2 p-1 rounded bg-white BtnPreset text-sm">🕮프리셋</button>
+      <button class="border mx-2 p-1 px-2 rounded bg-white BtnPreset text-sm">🕮프리셋</button>
     </div>
 
     <!-- 오른쪽 버튼 -->
     <div>
       <!-- 삭제버튼 -->
-      <button class="border p-1 rounded bg-white BtnDelete text-sm">❌</button>
+      <button class="border p-1 px-2 rounded bg-white BtnDelete text-sm">❌삭제</button>
     </div>
   </div>
 `
@@ -115,6 +115,11 @@ box.innerHTML = `
     doseInput.value =Number( ( Math.max((parseFloat(doseInput.value) || 0) - delta, 0)).toFixed(2) ) ;
     updateDrugBox(box);
   });
+  //프리셋 버튼
+  box.querySelector(".BtnPreset").addEventListener("click", () => {
+    currentBox = box; //e.target.closest(".bg-white"); // 현재 박스 저장
+    openModal();
+  });
   //값 보정
   box.querySelector(".infusionValue").addEventListener("change", () => {
     let delta = parseFloat(box.querySelector(".infusionValue").value) || 0.01;
@@ -129,6 +134,18 @@ box.innerHTML = `
     box.addEventListener("change", () => updateDrugBox(box));
   });
 }
+
+
+//모달 프리셋 버튼
+function openModal() {
+  document.getElementById("drugModal").classList.remove("hidden");
+  loadDrugs();
+}
+function closeModal() {
+  document.getElementById("drugModal").classList.add("hidden");
+}
+
+
 bwtBox.addEventListener("input", () => updateAllBoxes());
 function updateAllBoxes() {
   document.querySelectorAll("#inputBox > div").forEach(box => {
@@ -201,6 +218,89 @@ function updateDrugBox(box) {
   box.querySelector(".result").textContent = (result).toFixed(2) + " cc/hr";
   
 }
+
+// 약물 프리셋 로드
+let drugData = [];  // JSON 전체 저장
+let currentBox = null;  // 선택된 box 저장
+
+async function loadDrugs() {
+  const res = await fetch("PresetListDatas.json");  // JSON 불러오기
+  const json = await res.json();
+  drugData = json.list; // 내부 list 배열 저장
+
+  renderDrugList(drugData);
+  //openModal();
+}
+
+function renderDrugList(drugs) {
+  const list = document.getElementById("drugList");
+  list.innerHTML = "";
+
+  drugs.forEach((drug, idx) => {
+    const li = document.createElement("li");
+    li.innerHTML = `
+      <button class="w-full text-left border p-2 rounded "
+        onclick="applyDrug(${idx})">
+        <!-- <span class="text-gray-500 text-sm">[${drug.category}]</span> -->
+        <b>${drug.drugName}</b> 
+        (${drug.drugDose}${drug.drugGram} / ${drug.fluidTotalcc}cc) 
+         <span class="text-gray-500 text-sm">[${drug.category}]</span>
+      </button>`;
+    switch(drug.category) {
+      case "Inotrope":
+        li.querySelector("button").classList.add("bg-yellow-50");
+        break;
+      case "Sedation":
+        li.querySelector("button").classList.add("bg-blue-50");
+        break;
+      case "NeuromuscularBlocker":
+        li.querySelector("button").classList.add("bg-purple-50");
+        break;
+      case "Cardiovascular":
+        li.querySelector("button").classList.add("bg-red-50");
+        break;
+      case "Anticoagulation":
+        li.querySelector("button").classList.add("bg-green-50");
+        break;
+    }
+    list.appendChild(li);
+  });
+}
+
+/*
+function filterDrugs() {
+  const keyword = document.getElementById("drugSearch").value.toLowerCase();
+  const filtered = drugData.filter(drug =>
+    drug.drugName.toLowerCase().includes(keyword) ||
+    drug.category.toLowerCase().includes(keyword)
+  );
+  renderDrugList(filtered);
+}*/
+function applyDrug(index) {
+  const drug = drugData[index];
+  if (currentBox) {
+    currentBox.querySelector(".drugName").value = drug.drugName;
+    currentBox.querySelector(".drugDose").value = drug.drugDose;
+    currentBox.querySelector(".drugUnit").value = drug.drugGram;
+    currentBox.querySelector(".solutionVolume").value = drug.fluidTotalcc;
+    currentBox.querySelector(".infusionRate").value = drug.drugSpeed;
+    currentBox.querySelector(".infusionValue").value = drug.drugSpeed;
+
+    
+    const rate = drug.drugSpeedtxt.split("/");
+    //console.log(rate);
+    currentBox.querySelector(".rateGram").value = rate[0];
+    let string ="";
+    for(let i=1; i<rate.length; i++) {
+      string += "/"+rate[i];
+    }
+    currentBox.querySelector(".rateUnit").value = string;
+
+    updateDrugBox(currentBox);
+  }
+  closeModal();
+}
+
 
 // 버튼 클릭 시 박스 추가
 addBoxBtn.addEventListener("click", addBox);

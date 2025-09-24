@@ -15,10 +15,12 @@
     
         <div class="flex-1 ">
         <!-- 상단 고정 영역 -->
-            <div class="sticky top-0 bg-white z-10 p-4 rounded-2xl shadow-md max-h-[15vh]">
+            <div class="sticky top-0 bg-white z-10 p-4 rounded shadow-md max-h-[15vh]">
                 <h2 class="lg:text-2xl sm:text-4xl font-bold mb-2 text-center">
                     CIV drug Calculator <span id="version-text"></span>
                 </h2>
+                <h3 class="lg:text-lg sm:text-2xl font-semibold mb-2 text-center">
+                    - Black Library -
 
                 <div class="flex space-x-2 mb-4">
                     <!-- 모달 열기 버튼 -->
@@ -35,7 +37,7 @@
             </div>
         </div> 
         <!-- 반응형 레이아웃 -->
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-2 py-2" id="inputBox">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4 py-2" id="inputBox">
             <!-- 박스들이 여기에 추가됩니다 -->
         </div>
   </div>  
@@ -53,7 +55,16 @@
         </div>
     </div>
 
-    
+  <!-- 모달 -->
+    <div id="drugModal" class="fixed inset-0 bg-black bg-opacity-50 hidden flex items-center justify-center z-50">
+        <div class="bg-white p-4 rounded shadow max-w-md w-full">
+            <h2 class="text-lg font-bold mb-2">약물 선택</h2>
+            <ul id="drugList" class="space-y-2 max-h-[60vh] overflow-auto flex-cols-2"></ul>
+            <div class="flex justify-end mt-4">
+            <button onclick="closeModal()" class="px-4 py-2 bg-gray-200 rounded">닫기</button>
+            </div>
+        </div>
+    </div>
 </body>
 
 <script src="script.js"></script>
