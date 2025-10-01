@@ -17,11 +17,21 @@
         <!-- 상단 고정 영역 -->
             <div class="sticky top-0 bg-white z-10 p-4 rounded shadow-md max-h-[15vh]">
                 <h2 class="lg:text-2xl sm:text-4xl font-bold mb-2 text-center">
-                    CIV drug Calculator <span id="version-text"></span>
+                    CIV drug Calculator </span>
                 </h2>
+                <div class="flex justify-between items-center mb-2">
+                    <select id="langSwitcher" class="border p-1 rounded text-sm float-left">
+                        <option value="Korean">한국어</option>
+                        <option value="English">English</option>
+                    </select>
+                
                 <h3 class="lg:text-lg sm:text-2xl font-semibold mb-2 text-center">
                     - Black Library -
-
+                
+                    
+                </h3> 
+                <div id="version-text" class="text-sm text-gray-500 float-right"></div>
+                </div>
                 <div class="flex space-x-2 mb-4">
                     <!-- 모달 열기 버튼 -->
                      <!--
@@ -34,6 +44,7 @@
                     <button id="lang-en" class="px-4 py-2 lg:text-lg sm:text-2xl bg-gray-200 rounded">English</button>
                     -->
                 </div>
+               
             </div>
         </div> 
         <!-- 반응형 레이아웃 -->
@@ -47,7 +58,8 @@
         <button 
             id="addBoxBtn" 
             class="m-2 p-2 bg-blue-500 text-white rounded hover:bg-blue-600 text-lg md:text-lg sm:text-3xl">
-            ➕ 박스 추가
+
+            ➕ <span data-i18n="bt_new_rule">박스 추가</span>
         </button>
         <div class="p-0 m-0">
         <input type="number" id="bodyWeight" value="65" min="0.1" step="0.1" 
@@ -58,18 +70,20 @@
   <!-- 모달 -->
     <div id="drugModal" class="fixed inset-0 bg-black bg-opacity-50 hidden flex items-center justify-center z-50">
         <div class="bg-white p-4 rounded shadow max-w-md w-full">
-            <h2 class="text-lg font-bold mb-2">약물 선택</h2>
+            <h2 class="text-lg font-bold mb-2">📖<span data-i18n="txt_add_preset">프리셋 약물 선택</span></h2>
             <ul id="drugList" class="space-y-2 max-h-[60vh] overflow-auto flex-cols-2"></ul>
             <div class="flex justify-end mt-4">
-            <button onclick="closeModal()" class="px-4 py-2 bg-gray-200 rounded">닫기</button>
+            <input type="text" id="drugSearch" oninput="filterDrugs()" placeholder="약물 검색..." data-i18n-placeholder="txt_input"  class="flex-1 p-2 border rounded mt-2 m-2" /> <button onclick="closeModal()" class="px-4 py-2 bg-gray-200 rounded w-24 m-2" data-i18n="bt_cancel" >닫기</button>
             </div>
+            
         </div>
     </div>
 </body>
 
 <script src="core.js"></script>
+<script src="Language.js"></script>
 <script>
-  const version = "0.7.3"; // ← 버전 숫자 변수
+  const version = "0.7.4"; // ← 버전 숫자 변수
   document.getElementById("version-text").textContent = ` ver ${version}`;
   //document.getElementById("version-text2").textContent = `ver ${version}`;
 </script>

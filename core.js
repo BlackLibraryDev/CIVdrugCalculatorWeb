@@ -19,12 +19,12 @@ box.innerHTML = `
     <!-- 1행 -->
     <div class="grid grid-cols-[1fr_auto_auto_auto] gap-2 items-center">
       <!-- 약물이름 -->
-      <input type="text" placeholder="(약물이름)" 
+      <input type="text" placeholder="약물이름" data-i18n-placeholder="txt_drugname" 
         class="border p-1 rounded drugName flex-1 min-w-0 text-sm " />
 
       <div class="flex items-center gap-1">
         <!-- 약물용량 -->
-        <input type="number" placeholder="약물량" min="0" step="0.1"
+        <input type="number" placeholder="약물량" min="0" step="0.1" data-i18n-placeholder="txt_dose" 
           class="border p-1 rounded drugDose w-12 text-right text-sm" />
 
         <!-- 약물단위 -->
@@ -40,7 +40,7 @@ box.innerHTML = `
 
       <!-- 용액 용량 -->
       <div class="flex items-center">
-        <input type="number" placeholder="용액량" min="0" step="0.1"
+        <input type="number" placeholder="용액량" min="0" step="0.1" data-i18n-placeholder="txt_total_fluid" 
           class="border p-1 rounded w-12 solutionVolume text-right text-sm" />
         <span class="ml-1">cc</span>
       </div>
@@ -50,7 +50,7 @@ box.innerHTML = `
     <div class="grid grid-cols-[1fr_auto] gap-2 items-center mt-2">
       <div class="flex items-center gap-1">
         <!-- 주입속도 -->
-        <input type="number" placeholder="주입속도" min="0" step="0.01"
+        <input type="number" placeholder="주입속도" min="0" step="0.01" data-i18n-placeholder="txt_inj_speed" 
           class="border p-1 rounded infusionRate w-12 text-right text-sm" />
 
         <!-- 주입속도 단위 -->
@@ -83,13 +83,13 @@ box.innerHTML = `
       <button class="border p-1 rounded bg-white BtnDown text-sm">➖</button>
       <input type="number"  value="0.01" min="0.01" class="border p-1 rounded bg-white infusionValue w-12 text-center text-sm" />
       <button class="border p-1 rounded bg-white BtnUp text-sm">➕</button>
-      <button class="border mx-2 p-1 px-2 rounded bg-white BtnPreset text-sm">🕮프리셋</button>
+      <button class="border mx-2 p-1 px-2 rounded bg-white BtnPreset text-sm">📖<span data-i18n="txt_presets">프리셋</span></button> <!--✅-->
     </div>
 
     <!-- 오른쪽 버튼 -->
     <div>
       <!-- 삭제버튼 -->
-      <button class="border p-1 px-2 rounded bg-white BtnDelete text-sm">❌삭제</button>
+      <button class="border p-1 px-2 rounded bg-white BtnDelete text-sm">❌<span data-i18n="bt_delete_rule">삭제</span></button>
     </div>
   </div>
 `
@@ -133,6 +133,9 @@ box.innerHTML = `
     input.addEventListener("input", () => updateDrugBox(box));
     box.addEventListener("change", () => updateDrugBox(box));
   });
+
+  //번역
+  applyTranslations();
 }
 
 
@@ -238,14 +241,21 @@ function renderDrugList(drugs) {
 
   drugs.forEach((drug, idx) => {
     const li = document.createElement("li");
-    li.innerHTML = `
-      <button class="w-full text-left border p-2 rounded "
-        onclick="applyDrug(${idx})">
-        <!-- <span class="text-gray-500 text-sm">[${drug.category}]</span> -->
-        <b>${drug.drugName}</b> 
-        (${drug.drugDose}${drug.drugGram} / ${drug.fluidTotalcc}cc) 
-         <span class="text-gray-500 text-sm">[${drug.category}]</span>
-      </button>`;
+
+  let txt_category = "txt_" + drug.category; // i18n key 생성
+  let txt_name = drug.Tag;
+  //console.log(drug.Tag);
+
+  li.innerHTML = `
+    <button class="w-full text-left border p-2 rounded"
+      onclick="applyDrug(${idx})">
+      <b><span data-i18n="${txt_name}"> ${drug.drugName}</span></b>
+      (${drug.drugDose}${drug.drugGram} / ${drug.fluidTotalcc}cc) 
+      <span class="text-gray-500 text-sm">
+        [<span data-i18n="${txt_category}">${drug.category}</span>]
+      </span>
+    </button>`;
+
     switch(drug.category) {
       case "Inotrope":
         li.querySelector("button").classList.add("bg-yellow-50");
@@ -267,7 +277,7 @@ function renderDrugList(drugs) {
   });
 }
 
-/*
+
 function filterDrugs() {
   const keyword = document.getElementById("drugSearch").value.toLowerCase();
   const filtered = drugData.filter(drug =>
@@ -275,7 +285,7 @@ function filterDrugs() {
     drug.category.toLowerCase().includes(keyword)
   );
   renderDrugList(filtered);
-}*/
+}
 function applyDrug(index) {
   const drug = drugData[index];
   if (currentBox) {
