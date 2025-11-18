@@ -1,7 +1,16 @@
 const inputBox = document.getElementById("inputBox");
 const addBoxBtn = document.getElementById("addBoxBtn");
+const addPresetBtn = document.getElementById("addPresetBtn");
 const totalEl = document.getElementById("total");
 const bwtBox = document.getElementById("bodyWeight");
+
+// 버튼 클릭 시 박스 추가
+addBoxBtn.addEventListener("click", addBox);
+// 프리셋 버튼
+addPresetBtn.addEventListener("click", ()=>{
+  currentBox = addBox();
+  openModal();
+});
 
 // 박스 ID 관리
 let boxCount = 0;
@@ -15,9 +24,9 @@ function addBox() {
 
   // 박스 내부 내용
 box.innerHTML = `
-  <div class="bg-white p-3 rounded shadow w-full max-w-full text-sm">
+  <div class="bg-white p-3 rounded shadow w-full max-w-full text-sm innerbox">
     <!-- 1행 -->
-    <div class="grid grid-cols-[1fr_auto_auto_auto] gap-2 items-center">
+    <div class="grid grid-cols-4 gap-2 items-center"> <!--grid-cols-[1fr_auto_auto_auto] -->
       <!-- 약물이름 -->
       <input type="text" placeholder="약물이름" data-i18n-placeholder="txt_drugname" 
         class="border p-1 rounded drugName flex-1 min-w-0 text-sm " />
@@ -47,7 +56,7 @@ box.innerHTML = `
     </div>
 
     <!-- 2행 -->
-    <div class="grid grid-cols-[1fr_auto] gap-2 items-center mt-2">
+    <div class="grid grid-cols-2 gap-2 items-center mt-2"> <!--grid-cols-[1fr_auto]-->
       <div class="flex items-center gap-1">
         <!-- 주입속도 -->
         <input type="number" placeholder="주입속도" min="0" step="0.01" data-i18n-placeholder="txt_inj_speed" 
@@ -69,7 +78,7 @@ box.innerHTML = `
       </div>
 
       <!-- 결과값 -->
-      <div class="flex items-center font-bold text-blue-600 text-sm">
+      <div class="flex items-center justify-end font-bold text-blue-600 text-sm">
         = <span class="ml-2 result">0 cc/hr</span>
       </div>
     </div>
@@ -103,16 +112,16 @@ box.innerHTML = `
   });
   //증가버튼
   box.querySelector(".BtnUp").addEventListener("click", () => {
-    let delta = parseFloat(box.querySelector(".infusionValue").value) || 0.01;
+    let delta = parseFloat(box.querySelector(".infusionValue").value) || 0.001;
     const doseInput = box.querySelector(".infusionRate");
-    doseInput.value = Number( ((parseFloat(doseInput.value) || 0) + delta).toFixed(2) );
+    doseInput.value = Number( ((parseFloat(doseInput.value) || 0) + delta).toFixed(3) );
     updateDrugBox(box);
   });
   //감소버튼
   box.querySelector(".BtnDown").addEventListener("click", () => {
-    let delta = parseFloat(box.querySelector(".infusionValue").value) || 0.01;
+    let delta = parseFloat(box.querySelector(".infusionValue").value) || 0.001;
     const doseInput = box.querySelector(".infusionRate");
-    doseInput.value =Number( ( Math.max((parseFloat(doseInput.value) || 0) - delta, 0)).toFixed(2) ) ;
+    doseInput.value =Number( ( Math.max((parseFloat(doseInput.value) || 0) - delta, 0)).toFixed(3) ) ;
     updateDrugBox(box);
   });
   //프리셋 버튼
@@ -122,9 +131,9 @@ box.innerHTML = `
   });
   //값 보정
   box.querySelector(".infusionValue").addEventListener("change", () => {
-    let delta = parseFloat(box.querySelector(".infusionValue").value) || 0.01;
-    if(delta<0.01) {
-      box.querySelector(".infusionValue").value = 0.01;
+    let delta = parseFloat(box.querySelector(".infusionValue").value) || 0.001;
+    if(delta<0.001) {
+      box.querySelector(".infusionValue").value = 0.001;
     } 
   });
 
@@ -136,6 +145,7 @@ box.innerHTML = `
 
   //번역
   applyTranslations();
+  return box;
 }
 
 
@@ -144,8 +154,14 @@ function openModal() {
   document.getElementById("drugModal").classList.remove("hidden");
   loadDrugs();
 }
+document.getElementById("drugModal").addEventListener("click", (e) => {
+  if (e.target.id === "drugModal") {
+    closeModal();
+  }
+});
 function closeModal() {
   document.getElementById("drugModal").classList.add("hidden");
+  document.getElementById("drugSearch").value = "";
 }
 
 
@@ -244,59 +260,51 @@ function renderDrugList(drugs) {
 
   let txt_category = "txt_" + drug.category; // i18n key 생성
   let txt_name = drug.Tag;
-  //console.log(drug.Tag);
+  //console.log(drug);
 
   li.innerHTML = `
     <button class="w-full text-left border p-2 rounded"
       onclick="applyDrug(${idx})">
-      <b><span data-i18n="${txt_name}"> ${drug.drugName}</span></b>
+      <b><span data-i18n="${txt_name}"> ${translate(drug.Tag)??drug.drugName}</span></b>
       (${drug.drugDose}${drug.drugGram} / ${drug.fluidTotalcc}cc) 
       <span class="text-gray-500 text-sm">
-        [<span data-i18n="${txt_category}">${drug.category}</span>]
+        [<span data-i18n="${txt_category}">${translate(`txt_${drug.category}`)??drug.category}</span>]
       </span>
     </button>`;
-
-    switch(drug.category) {
-      case "Inotrope":
-        li.querySelector("button").classList.add("bg-yellow-50");
-        break;
-      case "Sedation":
-        li.querySelector("button").classList.add("bg-blue-50");
-        break;
-      case "NeuromuscularBlocker":
-        li.querySelector("button").classList.add("bg-purple-50");
-        break;
-      case "Cardiovascular":
-        li.querySelector("button").classList.add("bg-red-50");
-        break;
-      case "Anticoagulation":
-        li.querySelector("button").classList.add("bg-green-50");
-        break;
-    }
+    li.querySelector("button").classList.add(categoryColors[drug.category]||"bg-white");
     list.appendChild(li);
   });
 }
-
+const categoryColors ={
+  Inotrope: "bg-yellow-100",
+  Sedation: "bg-blue-100",
+  NeuromuscularBlocker: "bg-purple-100",
+  Cardiovascular: "bg-red-100",
+  Anticoagulation: "bg-green-100"
+}
 
 function filterDrugs() {
   const keyword = document.getElementById("drugSearch").value.toLowerCase();
   const filtered = drugData.filter(drug =>
-    drug.drugName.toLowerCase().includes(keyword) ||
-    drug.category.toLowerCase().includes(keyword)
+    translate(drug.Tag,"Korean").toLowerCase().includes(keyword) ||
+    translate(drug.Tag,"English").toLowerCase().includes(keyword) ||
+    translate(`txt_${drug.category}`,"Korean").toLowerCase().includes(keyword)||
+    translate(`txt_${drug.category}`,"English").toLowerCase().includes(keyword)
   );
   renderDrugList(filtered);
 }
 function applyDrug(index) {
   const drug = drugData[index];
   if (currentBox) {
-    currentBox.querySelector(".drugName").value = drug.drugName;
+    currentBox.querySelector(".drugName").value = translate(drug.Tag)??drug.drugName;
     currentBox.querySelector(".drugDose").value = drug.drugDose;
     currentBox.querySelector(".drugUnit").value = drug.drugGram;
     currentBox.querySelector(".solutionVolume").value = drug.fluidTotalcc;
     currentBox.querySelector(".infusionRate").value = drug.drugSpeed;
     currentBox.querySelector(".infusionValue").value = drug.drugSpeed;
+    currentBox.querySelector(".innerbox").classList.remove("bg-white", "bg-yellow-100", "bg-blue-100", "bg-purple-100", "bg-red-100", "bg-green-100");
+    currentBox.querySelector(".innerbox").classList.add(categoryColors[drug.category]||"bg-white");
 
-    
     const rate = drug.drugSpeedtxt.split("/");
     currentBox.querySelector(".rateGram").value = rate[0];
     let string ="";
@@ -310,6 +318,17 @@ function applyDrug(index) {
   closeModal();
 }
 
-
-// 버튼 클릭 시 박스 추가
-addBoxBtn.addEventListener("click", addBox);
+const noticeModal = document.getElementById("noticeModal");
+document.getElementById("noticeBtn").addEventListener("click", openNoticeModal);
+noticeModal.addEventListener("click", (e) => {
+  if (e.target.id === "noticeModal") {
+    closeNoticeModal();
+  } 
+});
+function openNoticeModal() {
+  noticeModal.classList.remove("hidden");
+}
+function closeNoticeModal() {
+  noticeModal.classList.add("hidden");
+}
+openNoticeModal(); // 공지사항 모달 자동 열기

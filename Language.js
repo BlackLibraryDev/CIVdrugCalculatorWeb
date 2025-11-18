@@ -1,6 +1,7 @@
 // i18n.js
 let i18nMap = {};
-let currentLang = "Korean"; // 기본 언어 설정
+let currentLang = "Korean"; // 기본 언어 설정, English, Korean 등
+const langList = ["Korean", "English"];
 
 async function loadI18n() {
   const res = await fetch("Language.json");
@@ -20,6 +21,13 @@ async function loadI18n() {
 });
 
   applyTranslations();
+}
+function translate(key, lang = currentLang) {
+  //console.log(i18nMap[currentLang][key]);
+  if (i18nMap[lang] && i18nMap[lang][key]) {
+    return i18nMap[lang][key]??key;
+  }
+  return key;
 }
 
 function applyTranslations() {

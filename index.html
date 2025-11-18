@@ -7,11 +7,14 @@
     <link rel="icon" href="favicon-32x32.png" />
     <link rel="apple-touch-icon" href="favicon-32x32.png" />
     <title> CIV Drug Calculator </title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="./dist/output.css" rel="stylesheet">
+    <!--콘솔에서 npx tailwindcss-cli -i src/input.css -o dist/output.css   입력하기-->
+    <!--<script src="https://cdn.tailwindcss.com"></script>-->
+    
 </head>
 
 <body class="bg-gray-100 flex items-center justify-center min-h-screen pb-20">
-  <div class="w-full lg:max-w-5xl lg:mx-auto rounded-xl shadow p-4   bg-gray-300">
+  <div class="w-full lg:max-w-5xl lg:mx-auto rounded-xl shadow p-2 bg-gray-300">
     
         <div class="flex-1 ">
         <!-- 상단 고정 영역 -->
@@ -20,16 +23,17 @@
                     CIV drug Calculator </span>
                 </h2>
                 <div class="flex justify-between items-center mb-2">
-                    <select id="langSwitcher" class="border p-1 rounded text-sm float-left">
-                        <option value="Korean">한국어</option>
-                        <option value="English">English</option>
-                    </select>
+                    <div class=" float-left">
+                         <button id="noticeBtn" class="p-1 bg-blue-300 text-black text-sm rounded shadow">
+                            📢공지사항
+                        </button>
+                        <select id="langSwitcher" class="border p-1 rounded text-sm bg-gray-300">
+                            <option value="Korean">한국어</option>
+                            <option value="English">English</option>
+                        </select>
+                        
+                    </div>
                 
-                <h3 class="lg:text-lg sm:text-2xl font-semibold mb-2 text-center">
-                    - Black Library -
-                
-                    
-                </h3> 
                 <div id="version-text" class="text-sm text-gray-500 float-right"></div>
                 </div>
                 <div class="flex space-x-2 mb-4">
@@ -53,37 +57,65 @@
         </div>
   </div>  
 
-   <div class="fixed bottom-0 left-0 w-full p-4 flex items-center justify-between ">
+   <div class="fixed bottom-0 left-0 w-full p-2 flex items-center justify-between ">
         <!-- 버튼 -->
-        <button 
-            id="addBoxBtn" 
-            class="m-2 p-2 bg-blue-500 text-white rounded hover:bg-blue-600 text-lg md:text-lg sm:text-3xl">
+         <div>
+        <button id="addBoxBtn" 
+            class="m-1 p-2 bg-blue-400 text-black rounded hover:bg-blue-500 text-sm md:text-lg lg:text-xl">
 
             ➕ <span data-i18n="bt_new_rule">박스 추가</span>
         </button>
-        <div class="p-0 m-0">
+        <button id="addPresetBtn" 
+            class="m-1 p-2 bg-gray-400 text-black rounded hover:bg-white-600 text-sm md:text-lg lg:text-xl">
+
+            📖<span data-i18n="txt_presets">프리셋</span>
+        </button>
+        </div>
+
+        <div class="px-2 py-0 m-0">
         <input type="number" id="bodyWeight" value="65" min="0.1" step="0.1" 
-            class="w-24 p-2 border rounded m-2 text-right text-2xl sm:text-4xl" /><span class="text-right text-2xl">kg</span>
+            class="w-16 md:w-24 lg:w-24 px-2 py-1 border rounded bg-blue-300 m-2 text-right text-2xl md:text-4xl lg:text-4xl " /><span class="text-right text-md md:text-2xl">kg</span>
         </div>
     </div>
 
-  <!-- 모달 -->
+  <!-- 프리셋 모달 -->
     <div id="drugModal" class="fixed inset-0 bg-black bg-opacity-50 hidden flex items-center justify-center z-50">
         <div class="bg-white p-4 rounded shadow max-w-md w-full">
             <h2 class="text-lg font-bold mb-2">📖<span data-i18n="txt_add_preset">프리셋 약물 선택</span></h2>
-            <ul id="drugList" class="space-y-2 max-h-[60vh] overflow-auto flex-cols-2"></ul>
+            <ul id="drugList" class="space-y-2 max-h-96 overflow-auto grid-cols-1"></ul>
             <div class="flex justify-end mt-4">
-            <input type="text" id="drugSearch" oninput="filterDrugs()" placeholder="약물 검색..." data-i18n-placeholder="txt_input"  class="flex-1 p-2 border rounded mt-2 m-2" /> <button onclick="closeModal()" class="px-4 py-2 bg-gray-200 rounded w-24 m-2" data-i18n="bt_cancel" >닫기</button>
+                <input type="text" id="drugSearch" oninput="filterDrugs()" placeholder="약물 검색..." data-i18n-placeholder="txt_input"  class="flex-1 p-2 border rounded mt-2 m-2" /> 
+                <button onclick="closeModal()" class="px-4 py-2 bg-gray-200 rounded w-24 m-2" data-i18n="bt_cancel" >닫기</button>
+                
+            </div>
+            
+        </div>
+    </div>
+
+    <!-- 공지사항 모달 -->
+    <div id="noticeModal" class="fixed inset-0 p-2 bg-black bg-opacity-50 hidden flex items-center justify-center z-50">
+        <div class="bg-white p-4 rounded shadow max-w-md w-full">
+            <h2 class="text-lg font-bold mb-2">📢공지사항</h2>
+            <div class="max-h-96 overflow-auto">
+                <p class="mb-2">CIV Drug Calculator 웹버전이 업데이트 되었습니다.</p>
+                <ul class="list-disc list-inside mb-2 text-md">
+                    <li>0.7.5</li>
+                    <li>Cloudflare 서비스 장애로 인해 내장 Tailwind.css로 변경</li>
+                    <li>프리셋 기능을 추가했습니다</li>
+                </ul>
+                <a class="block" target="_blank" href="https://play.google.com/store/apps/details?id=com.BlackLibrary.CIVdrugsCalculator&pcampaignid=web_share">📲안드로이드 앱 바로가기</a>
+                <a class="block" href="mailto:shadowstarDeveloper@gmail.com">📧문의 : shadowstarDeveloper@gmail.com</a>
+                <p class="text-sm text-gray-400">Black Library</p>
             </div>
             
         </div>
     </div>
 </body>
 
-<script src="core.js"></script>
 <script src="Language.js"></script>
+<script src="core.js"></script>
 <script>
-  const version = "0.7.4"; // ← 버전 숫자 변수
+  const version = "0.7.5"; // ← 버전 숫자 변수
   document.getElementById("version-text").textContent = ` ver ${version}`;
   //document.getElementById("version-text2").textContent = `ver ${version}`;
 </script>

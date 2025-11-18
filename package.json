@@ -1,0 +1,31 @@
+{
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4.1.17",
+    "autoprefixer": "^10.4.22",
+    "postcss": "^8.5.6",
+    "tailwindcss": "^4.1.17",
+    "tailwindcss-cli": "^0.1.2"
+  },
+  "dependencies": {
+    "@tailwindcss/vite": "^4.1.17",
+    "xlsx": "^0.18.5"
+  },
+  "name": "civdrugcalculatorweb",
+  "version": "1.0.0",
+  "description": "https://shadowstardeveloper.github.io/CIVdrugCalculatorWeb",
+  "main": "core.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/BlackLibraryDev/CIVdrugCalculatorWeb.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/BlackLibraryDev/CIVdrugCalculatorWeb/issues"
+  },
+  "homepage": "https://github.com/BlackLibraryDev/CIVdrugCalculatorWeb#readme"
+}
