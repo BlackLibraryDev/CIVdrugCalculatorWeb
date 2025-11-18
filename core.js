@@ -26,7 +26,7 @@ function addBox() {
 box.innerHTML = `
   <div class="bg-white p-3 rounded shadow w-full max-w-full text-sm innerbox">
     <!-- 1행 -->
-    <div class="grid grid-cols-4 gap-2 items-center"> <!--grid-cols-[1fr_auto_auto_auto] -->
+    <div class="grid grid-cols-[1fr_auto_auto_auto] gap-2 items-center"> <!--grid-cols-[1fr_auto_auto_auto] -->
       <!-- 약물이름 -->
       <input type="text" placeholder="약물이름" data-i18n-placeholder="txt_drugname" 
         class="border p-1 rounded drugName flex-1 min-w-0 text-sm " />
@@ -56,7 +56,7 @@ box.innerHTML = `
     </div>
 
     <!-- 2행 -->
-    <div class="grid grid-cols-2 gap-2 items-center mt-2"> <!--grid-cols-[1fr_auto]-->
+    <div class="grid grid-cols-[1fr_auto] gap-2 items-center mt-2"> <!--grid-cols-[1fr_auto]-->
       <div class="flex items-center gap-1">
         <!-- 주입속도 -->
         <input type="number" placeholder="주입속도" min="0" step="0.01" data-i18n-placeholder="txt_inj_speed" 
