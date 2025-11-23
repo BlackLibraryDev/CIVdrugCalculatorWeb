@@ -101,8 +101,7 @@ box.innerHTML = `
       <button class="border p-1 px-2 rounded bg-white BtnDelete text-sm">❌<span data-i18n="bt_delete_rule">삭제</span></button>
     </div>
   </div>
-`
-
+`;
 
   inputBox.appendChild(box);
 
@@ -164,6 +163,44 @@ function closeModal() {
   document.getElementById("drugSearch").value = "";
 }
 
+// 체중 상자
+let Interval = null;
+let intervalN =0;
+function parseBwt(value){
+  
+  bwtBox.value = Number( ((parseFloat(bwtBox.value) || 0) + value).toFixed(1) );
+  updateAllBoxes();
+}
+document.getElementById("BtnBwtUp").addEventListener("touchstart", () => {
+  clearInterval(Interval);
+  intervalN =0;
+  let delta = +0.1;
+  parseBwt(delta);
+  Interval = setInterval(() => {
+    intervalN++;
+    if(delta !=1 && intervalN>9){
+      delta = 1;
+    }
+    parseBwt(delta);
+  }, 120);
+});
+document.getElementById("BtnBwtDown").addEventListener("touchstart", () => {
+  clearInterval(Interval);
+  intervalN =0;
+  let delta = -0.1;
+  parseBwt(delta);
+  Interval = setInterval(() => {
+    intervalN++;
+    if(delta !=-1 && intervalN>9){
+      delta = -1;
+    }
+    parseBwt(delta);
+  }, 120);
+});
+document.addEventListener("touchend", () => {
+  clearInterval(Interval);
+  intervalN =0;
+});
 
 bwtBox.addEventListener("input", () => updateAllBoxes());
 function updateAllBoxes() {

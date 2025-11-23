@@ -56,9 +56,37 @@
             <!-- 박스들이 여기에 추가됩니다 -->
         </div>
   </div>  
-
-   <div class="fixed bottom-0 left-0 w-full p-2 flex items-center justify-between ">
+    <!-- 하단 고정 영역 -->
+     <div class="fixed bottom-0 w-full p-2 flex items-center justify-between max-w-lg">
         <!-- 버튼 -->
+         <div>
+            <button id="addBoxBtn" 
+                class="m-1 p-2 bg-blue-400 text-black rounded hover:bg-blue-500 text-sm md:text-lg lg:text-xl">
+
+                ➕ <span data-i18n="bt_new_rule">박스 추가</span>
+            </button>
+            <button id="addPresetBtn" 
+                class="m-1 p-2 bg-gray-400 text-black rounded hover:bg-white-600 text-sm md:text-lg lg:text-xl">
+
+                📖<span data-i18n="txt_presets">프리셋</span>
+            </button>
+        </div>
+        <div class="sm:mx-0 md:mx-0 lg:mx-4"> 
+            <div class="px-2 py-0 m-0 flex items-center">
+                <div class ="rounded bg-blue-300 border p-1">
+                    <input type="number" id="bodyWeight" value="65" min="0.1" step="0.1" 
+                        class="w-16 md:w-24 lg:w-24 px-2 py-1 hover border rounded bg-white/60 m-0 text-right text-2xl md:text-4xl lg:text-4xl " /><span class="text-right text-md md:text-2xl">kg</span>
+                    </input>
+                  </div>
+                <div class="px-2 py-0 m-0 grid grid-rows-2 gap-0">
+                    <button id="BtnBwtUp" class="border p-1 rounded bg-white text-sm">➕</button>
+                    <button id="BtnBwtDown" class="border p-1 rounded bg-white text-sm">➖</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--
+    <div class="fixed bottom-0 left-0 w-full p-2 flex items-center justify-between ">
          <div>
         <button id="addBoxBtn" 
             class="m-1 p-2 bg-blue-400 text-black rounded hover:bg-blue-500 text-sm md:text-lg lg:text-xl">
@@ -77,7 +105,7 @@
             class="w-16 md:w-24 lg:w-24 px-2 py-1 border rounded bg-blue-300 m-2 text-right text-2xl md:text-4xl lg:text-4xl " /><span class="text-right text-md md:text-2xl">kg</span>
         </div>
     </div>
-
+    -->
   <!-- 프리셋 모달 -->
     <div id="drugModal" class="fixed inset-0 bg-black bg-opacity-50 hidden flex items-center justify-center z-50">
         <div class="bg-white p-4 rounded shadow max-w-md w-full">
@@ -99,9 +127,13 @@
             <div class="max-h-96 overflow-auto">
                 <p class="mb-2">CIV Drug Calculator 웹버전이 업데이트 되었습니다.</p>
                 <ul class="list-disc list-inside mb-2 text-md">
-                    <li>0.7.5</li>
+                    <li>= 0.7.6 =</li>
+                    <li>체중 증감량 터치 버튼을 추가했습니다</li>
+                    <li>하단 UX가 멀리 벌어지지 않도록 수정했습니다</li>
+                    <li>= 0.7.5 =</li>
                     <!--<li>Cloudflare 서비스 장애로 인해 내장 Tailwind.css로 변경</li>-->
                     <li>프리셋 기능을 추가했습니다</li>
+                    <li>프리셋 항목으로 추가 시 카테고리 색상으로 변경됩니다</li>
                 </ul>
                 <a class="block" target="_blank" href="https://play.google.com/store/apps/details?id=com.BlackLibrary.CIVdrugsCalculator&pcampaignid=web_share">📲안드로이드 앱 바로가기</a>
                 <a class="block" href="mailto:shadowstarDeveloper@gmail.com">📧문의 : shadowstarDeveloper@gmail.com</a>
@@ -115,7 +147,7 @@
 <script src="Language.js"></script>
 <script src="core.js"></script>
 <script>
-  const version = "0.7.5"; // ← 버전 숫자 변수
+  const version = "0.7.6"; // ← 버전 숫자 변수
   document.getElementById("version-text").textContent = ` ver ${version}`;
   //document.getElementById("version-text2").textContent = `ver ${version}`;
 </script>
