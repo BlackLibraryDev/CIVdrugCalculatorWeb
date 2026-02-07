@@ -108,6 +108,7 @@ box.innerHTML = `
   //삭제버튼
   box.querySelector(".BtnDelete").addEventListener("click", () => {
     box.remove();
+    saveData();
   });
   //증가버튼
   box.querySelector(".BtnUp").addEventListener("click", () => {
