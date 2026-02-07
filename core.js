@@ -60,7 +60,7 @@ box.innerHTML = `
       <div class="flex items-center gap-1">
         <!-- 주입속도 -->
         <input type="number" placeholder="주입속도" min="0" step="0.01" data-i18n-placeholder="txt_inj_speed" 
-          class="border p-1 rounded infusionRate w-12 text-right text-sm" />
+          class="border p-1 rounded infusionRate w-16 text-right text-sm" />
 
         <!-- 주입속도 단위 -->
         <select class="border p-1 rounded rateGram w-14 text-right text-sm">
@@ -78,8 +78,8 @@ box.innerHTML = `
       </div>
 
       <!-- 결과값 -->
-      <div class="flex items-center justify-end font-bold text-blue-600 text-sm">
-        = <span class="ml-2 result">0 cc/hr</span>
+      <div class="flex items-center justify-end font-bold text-blue-600 text-md">
+        = <span class="ml-2 result text-lg">0 cc/hr</span>
       </div>
     </div>
 
@@ -171,31 +171,35 @@ function parseBwt(value){
   bwtBox.value = Number( ((parseFloat(bwtBox.value) || 0) + value).toFixed(1) );
   updateAllBoxes();
 }
-document.getElementById("BtnBwtUp").addEventListener("touchstart", () => {
+function deltaBwt(delta = 0){
   clearInterval(Interval);
   intervalN =0;
-  let delta = +0.1;
   parseBwt(delta);
+  //console.log("BtnBwtUp");
   Interval = setInterval(() => {
     intervalN++;
-    if(delta !=1 && intervalN>9){
-      delta = 1;
+    //console.log(parseFloat(bwtBox.value)%1);
+    if(Math.abs(delta)<1 && (intervalN>9 && parseFloat(bwtBox.value)%1==0)){
+      delta *=10;
     }
     parseBwt(delta);
   }, 120);
+}
+document.getElementById("BtnBwtUp").addEventListener("touchstart", () => {
+  deltaBwt(0.1);
 });
 document.getElementById("BtnBwtDown").addEventListener("touchstart", () => {
+  deltaBwt(-0.1);
+});
+document.getElementById("BtnBwtUp").addEventListener("mousedown", () => {
+  deltaBwt(0.1);
+});
+document.getElementById("BtnBwtDown").addEventListener("mousedown", () => {
+  deltaBwt(-0.1);
+});
+document.addEventListener("mouseup", () => {
   clearInterval(Interval);
   intervalN =0;
-  let delta = -0.1;
-  parseBwt(delta);
-  Interval = setInterval(() => {
-    intervalN++;
-    if(delta !=-1 && intervalN>9){
-      delta = -1;
-    }
-    parseBwt(delta);
-  }, 120);
 });
 document.addEventListener("touchend", () => {
   clearInterval(Interval);
@@ -272,6 +276,8 @@ function updateDrugBox(box) {
   //const result = vol > 0 ? ((num * rate) / vol).toFixed(2) : 0;
   const result = (rate * vol * bodyWeight * _min) / (drugDose * _dose) *_doseUnit ;
   box.querySelector(".result").textContent = (result).toFixed(2) + " cc/hr";
+
+  saveData();
   
 }
 
@@ -353,7 +359,54 @@ function applyDrug(index) {
     updateDrugBox(currentBox);
   }
   closeModal();
+  saveData();
 }
+///// localStrorage
+
+function saveData() {
+  const groups = document.querySelectorAll('.innerbox');
+  const allData = [];
+
+  groups.forEach((currentBox) => {
+    const groupData = {};
+    groupData['drugName'] = currentBox.querySelector(".drugName").value;
+    groupData['drugDose'] =currentBox.querySelector(".drugDose").value;
+    groupData['drugUnit'] =currentBox.querySelector(".drugUnit").value;
+    groupData['solutionVolume'] =currentBox.querySelector(".solutionVolume").value;
+    groupData['infusionRate'] =currentBox.querySelector(".infusionRate").value ;
+    const bgColor = [...currentBox.classList].find(cls => cls.startsWith('bg-'));
+    groupData['category'] = bgColor;
+    groupData['infusionValue'] = currentBox.parentElement.querySelector('.infusionValue').value;
+
+    allData.push(groupData);
+    //console.log(groupData);
+  });
+
+  localStorage.setItem('multiDivData', JSON.stringify(allData));
+
+  console.log('저장되었습니다!');
+}
+function loadData() {
+  const savedData = localStorage.getItem('multiDivData');
+  if (savedData) {
+    const parsedData = JSON.parse(savedData);
+    console.log('로드된 데이터:', parsedData);
+    parsedData.forEach((data) => {
+      const box = addBox();
+      box.querySelector(".drugName").value = data['drugName'];
+      box.querySelector(".drugDose").value = data['drugDose'];
+      box.querySelector(".drugUnit").value = data['drugUnit'];
+      box.querySelector(".solutionVolume").value = data['solutionVolume'];
+      box.querySelector(".infusionRate").value = data['infusionRate'];
+      box.querySelector(".infusionValue").value = data['infusionValue'];
+      box.querySelector(".innerbox").classList.remove("bg-white", "bg-yellow-100", "bg-blue-100", "bg-purple-100", "bg-red-100", "bg-green-100");
+      box.querySelector(".innerbox").classList.add(data['category']||"bg-white");
+      updateDrugBox(box);
+    });
+  }
+}
+loadData();
+/////
 
 const noticeModal = document.getElementById("noticeModal");
 document.getElementById("noticeBtn").addEventListener("click", openNoticeModal);
