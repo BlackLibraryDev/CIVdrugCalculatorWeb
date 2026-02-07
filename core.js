@@ -170,7 +170,7 @@ let intervalN =0;
 function parseBwt(value){
   
   bwtBox.value = Number( ((parseFloat(bwtBox.value) || 0) + value).toFixed(1) );
-  updateAllBoxes();
+  updateAllBoxes(false);
 }
 function deltaBwt(delta = 0){
   clearInterval(Interval);
@@ -208,13 +208,13 @@ document.addEventListener("touchend", () => {
 });
 
 bwtBox.addEventListener("input", () => updateAllBoxes());
-function updateAllBoxes() {
+function updateAllBoxes(save=true) {
   document.querySelectorAll("#inputBox > div").forEach(box => {
-    updateDrugBox(box);
+    updateDrugBox(box, save);
   });
 }
 
-function updateDrugBox(box) {
+function updateDrugBox(box, save=true) {
   const drugDose = parseFloat(box.querySelector(".drugDose").value) || 0;
   const vol = parseFloat(box.querySelector(".solutionVolume").value) || 0;
   const drugUnit = box.querySelector(".drugUnit").value;
@@ -277,9 +277,9 @@ function updateDrugBox(box) {
   //const result = vol > 0 ? ((num * rate) / vol).toFixed(2) : 0;
   const result = (rate * vol * bodyWeight * _min) / (drugDose * _dose) *_doseUnit ;
   box.querySelector(".result").textContent = (result).toFixed(2) + " cc/hr";
-
-  saveData();
-  
+  if(save){
+    saveData();
+  }
 }
 
 // 약물 프리셋 로드
