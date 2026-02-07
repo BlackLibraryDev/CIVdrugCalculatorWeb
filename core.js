@@ -375,6 +375,9 @@ function saveData() {
     groupData['drugUnit'] =currentBox.querySelector(".drugUnit").value;
     groupData['solutionVolume'] =currentBox.querySelector(".solutionVolume").value;
     groupData['infusionRate'] =currentBox.querySelector(".infusionRate").value ;
+    groupData['rateGram'] =currentBox.querySelector(".rateGram").value ;
+    groupData['rateUnit'] =currentBox.querySelector(".rateUnit").value ;
+
     const bgColor = [...currentBox.classList].find(cls => cls.startsWith('bg-'));
     groupData['category'] = bgColor;
     groupData['infusionValue'] = currentBox.parentElement.querySelector('.infusionValue').value;
@@ -399,6 +402,8 @@ function loadData() {
       box.querySelector(".drugUnit").value = data['drugUnit'];
       box.querySelector(".solutionVolume").value = data['solutionVolume'];
       box.querySelector(".infusionRate").value = data['infusionRate'];
+      box.querySelector(".rateGram").value = data['rateGram'];
+      box.querySelector(".rateUnit").value = data['rateUnit'];
       box.querySelector(".infusionValue").value = data['infusionValue'];
       box.querySelector(".innerbox").classList.remove("bg-white", "bg-yellow-100", "bg-blue-100", "bg-purple-100", "bg-red-100", "bg-green-100");
       box.querySelector(".innerbox").classList.add(data['category']||"bg-white");
