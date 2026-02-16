@@ -10,7 +10,7 @@
     <!--<link href="./dist/output.css" rel="stylesheet">-->
     <!--콘솔에서 npx tailwindcss-cli -i src/input.css -o dist/output.css   입력하기-->
     <script src="https://cdn.tailwindcss.com"></script>
-    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 </head>
 
 <body class="bg-gray-100 flex items-center justify-center min-h-screen pb-20">
@@ -110,7 +110,7 @@
     <div id="drugModal" class="fixed inset-0 bg-black bg-opacity-50 hidden flex items-center justify-center z-50">
         <div class="bg-white p-4 rounded shadow max-w-md w-full">
             <h2 class="text-lg font-bold mb-2">📖<span data-i18n="txt_add_preset">프리셋 약물 선택</span></h2>
-            <ul id="drugList" class="space-y-2 max-h-96 overflow-auto grid-cols-1"></ul>
+            <ul id="drugList" class="space-y-1 max-h-96 overflow-auto grid-cols-1"></ul>
             <div class="flex justify-end mt-4">
                 <input type="text" id="drugSearch" oninput="filterDrugs()" placeholder="약물 검색..." data-i18n-placeholder="txt_input"  class="flex-1 p-2 border rounded mt-2 m-2" /> 
                 <button onclick="closeModal()" class="px-4 py-2 bg-gray-200 rounded w-24 m-2" data-i18n="bt_cancel" >닫기</button>
@@ -124,10 +124,12 @@
     <div id="noticeModal" class="fixed inset-0 p-2 bg-black bg-opacity-50 hidden flex items-center justify-center z-50">
         <div class="flex flex-col max-w-md w-full gap-2">
             <div class="grid bg-white p-4 rounded shadow ">
-                <h2 class="text-lg font-bold mb-2">📢공지사항</h2>
-                <div class="max-h-96 overflow-auto">
-                    <p class="mb-2">CIV Drug Calculator 웹버전</p>
+                <h2 class="flex items-center justify-center text-lg font-bold mb-2">📢CIV Drug Calculator 웹버전</h2>
+                <div class="max-h-64 overflow-auto">
+                    
                     <ul class="list-disc list-inside mb-2 text-md">
+                        <li>= 0.8.3 =</li>
+                        <li>모바일 웹에서 확대 동작이 되지 않도록 수정했습니다</li>
                         <li>= 0.8.2 =</li>
                         <li>현재 세팅한 값들이 저장되어 다음번에도 표시됩니다</li>
                         <li>체중 증감량 터치 버튼이 작동하도록 수정했습니다</li>
@@ -138,9 +140,9 @@
                         <li>프리셋 기능을 추가했습니다</li>
                         <li>프리셋 항목으로 추가 시 카테고리 색상으로 변경됩니다</li>
                     </ul>
-                    <p class="text-sm text-gray-400">Black Library</p>
+                    
                 </div>
-                
+                <p class="flex text-sm text-gray-400 items-center justify-center">Black Library</p>
             </div>
             <div class="grid grid-cols-7 mb-2 gap-2">
                 
