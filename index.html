@@ -127,18 +127,9 @@
                 <h2 class="flex items-center justify-center text-lg font-bold mb-2">📢CIV Drug Calculator 웹버전</h2>
                 <div class="max-h-64 overflow-auto">
                     
-                    <ul class="list-disc list-inside mb-2 text-md">
-                        <li>= 0.8.3 =</li>
-                        <li>모바일 웹에서 확대 동작이 되지 않도록 수정했습니다</li>
-                        <li>= 0.8.2 =</li>
-                        <li>현재 세팅한 값들이 저장되어 다음번에도 표시됩니다</li>
-                        <li>체중 증감량 터치 버튼이 작동하도록 수정했습니다</li>
-                        <li>= 0.7.6 =</li>
-                        <li>하단 UX가 멀리 벌어지지 않도록 수정했습니다</li>
-                        <li>= 0.7.5 =</li>
-                        <!--<li>Cloudflare 서비스 장애로 인해 내장 Tailwind.css로 변경</li>-->
-                        <li>프리셋 기능을 추가했습니다</li>
-                        <li>프리셋 항목으로 추가 시 카테고리 색상으로 변경됩니다</li>
+                    <ul id="noticeText" class="list-disc list-inside mb-2 text-md">
+                        <!-- 공지사항 내용이 여기에 동적으로 추가됩니다 -->
+                         <!-- Langunage.js -->
                     </ul>
                     
                 </div>
@@ -149,7 +140,7 @@
                     <a class="block bg-blue-200 rounded shadow col-span-4 flex justify-center items-center text-lg" target="_blank" href="https://play.google.com/store/apps/details?id=com.BlackLibrary.CIVdrugsCalculator&pcampaignid=web_share">📲안드로이드 앱 바로가기</a>      
                 
                 
-                    <a class="block bg-white rounded shadow col-span-3 flex justify-center items-center text-sm p-2" href="mailto:shadowstarDeveloper@gmail.com">📧문의 : shadowstarDeveloper</a>
+                    <a class="block bg-white rounded shadow col-span-3 flex justify-center items-center text-sm p-2" href="mailto:shadowstarDeveloper@gmail.com">📧문의(gmail) : shadowstarDeveloper@</a>
                 
             </div>
         </div>
@@ -159,7 +150,7 @@
 <script src="Language.js"></script>
 <script src="core.js"></script>
 <script>
-  const version = "0.8.3"; // ← 버전 숫자 변수
+  const version = "0.8.4"; // ← 버전 숫자 변수
   document.getElementById("version-text").textContent = ` ver ${version}`;
   //document.getElementById("version-text2").textContent = `ver ${version}`;
 </script>

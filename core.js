@@ -103,6 +103,7 @@ box.innerHTML = `
   </div>
 `;
 
+
   inputBox.appendChild(box);
 
   //삭제버튼
@@ -115,14 +116,14 @@ box.innerHTML = `
     let delta = parseFloat(box.querySelector(".infusionValue").value) || 0.001;
     const doseInput = box.querySelector(".infusionRate");
     doseInput.value = Number( ((parseFloat(doseInput.value) || 0) + delta).toFixed(3) );
-    updateDrugBox(box);
+    updateDrugBox(box, false);
   });
   //감소버튼
   box.querySelector(".BtnDown").addEventListener("click", () => {
     let delta = parseFloat(box.querySelector(".infusionValue").value) || 0.001;
     const doseInput = box.querySelector(".infusionRate");
     doseInput.value =Number( ( Math.max((parseFloat(doseInput.value) || 0) - delta, 0)).toFixed(3) ) ;
-    updateDrugBox(box);
+    updateDrugBox(box, false);
   });
   //프리셋 버튼
   box.querySelector(".BtnPreset").addEventListener("click", () => {
@@ -147,7 +148,24 @@ box.innerHTML = `
   applyTranslations();
   return box;
 }
+/* 브라우저 언어 설정*/
+const userLang = navigator.language || navigator.userLanguage || "en"; 
+console.log("브라우저 언어:", userLang);
+document.getElementById("langSwitcher").value = userLang.includes("ko") ? "Korean" : "English"; 
+currentLang = document.getElementById("langSwitcher").value;
+applyTranslations();
 
+/**
+ * 숫자를 현지화된 문자열로 변환하는 함수
+ * @param {number} value - 변환할 숫자
+ * @param {string} locale - 국가 코드 (기본값: 브라우저 설정)
+ */
+function formatLocaleNumber(value, locale = userLang) {
+    return new Intl.NumberFormat(locale, {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+    }).format(value);
+}
 
 //모달 프리셋 버튼
 function openModal() {
@@ -276,7 +294,9 @@ function updateDrugBox(box, save=true) {
   // 💡 여기서 계산식 정의 (예시: 결과 = (숫자 * rate) / vol)
   //const result = vol > 0 ? ((num * rate) / vol).toFixed(2) : 0;
   const result = (rate * vol * bodyWeight * _min) / (drugDose * _dose) *_doseUnit ;
-  box.querySelector(".result").textContent = (result).toFixed(2) + " cc/hr";
+
+  box.querySelector(".result").textContent = formatLocaleNumber(result) + " cc/hr";
+  //console.log(new Intl.NumberFormat('fr-DZ').format(result));
   if(save){
     saveData();
   }
